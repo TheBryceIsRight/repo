@@ -36,7 +36,7 @@ def gtPushMatrix():
 def gtPopMatrix():
     global stack
     if (stack and len(stack) > 1):
-        stack.pop()
+        del stack[0]
     else:
         print("Error: Cannot use pop() on an empty stack")
 

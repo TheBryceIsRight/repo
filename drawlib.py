@@ -105,25 +105,19 @@ def gtEndShape():
             
         if(isOrthographic == True):
             print "Point 1 : " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
-            ctm = gtGetMatrix()            
-            pt1 = matmult(ctm, pt1)
-            pt2 = matmult(ctm, pt2)
-            print "Point 1 after CTM: " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
             pt1[0][0] = (width/(right - left)) * (pt1[0][0] - left)
             pt1[1][0] = (height/(top - bottom)) * (pt1[1][0] - bottom)
             pt2[0][0] = (width/(right - left)) * (pt2[0][0] - left)
             pt2[1][0] = (height/(top - bottom)) * (pt2[1][0] - bottom)
             print "Point 1 after Ortho: " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
-            line(pt1[0][0], pt1[1][0], pt1[2][0], pt2[0][0], pt2[1][0], pt2[2][0])
+            line(pt1[0][0], pt1[1][0], pt2[0][0], pt2[1][0])
         else:
-            print "Point 1 : " + str(pt1[0][0]) + ", " + str(pt1[0][1]) + ", " + str(pt1[0][2])
-            pt1 = matmult(gtGetMatrix(), pt1)
-            print "Point 1 after CTM: " + str(pt1[0][0]) + ", " + str(pt1[0][1]) + ", " + str(pt1[0][2])
+            print "Point 1 : " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
             pt1[0][0] =  (pt1[0][0] + k) * (width/(2*k))
             pt2 = matmult(gtGetMatrix(), pt2)
-            pt1[0][1] =  (pt1[0][0] + k) * (height/(2*k))
+            pt1[1][0] =  (pt1[1][0] - k) * (-height/(2*k))
             pt2 = matmult(gtGetMatrix(), pt2)
-            print "Point 1 after Perspective: " + str(pt1[0][0]) + ", " + str(pt1[0][1]) + ", " + str(pt1[0][2]) + "\n"
+            print "Point 1 after Perspective: " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
         
     
     pass
@@ -135,6 +129,8 @@ def getPointValues(pt1):
 def gtVertex(x, y, z):
     #is apparently also known as gtAddVertex
     #used for adding vertices to the global list of points
-    vertice_list.append([[float(x)], [float(y)], [float(z), 1]])
+    ctm = gtGetMatrix()            
+    pt1 = matmult(ctm, [[float(x)], [float(y)], [float(z), 1]])
+    vertice_list.append(pt1)
     
     pass
