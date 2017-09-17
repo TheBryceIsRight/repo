@@ -1,0 +1,102 @@
+# Drawing Routines, like OpenGL
+
+from matlib import *
+
+#Instance Variables
+global vertice_list
+global current_mat
+global right
+global left
+global top
+global bottom
+global far
+global near
+global vertice_list
+global isOrthographic
+global fov
+global near_persp
+global far_persp
+global ortho_matrix
+global width, height
+
+vertice_list = []
+width = 800
+height = 800
+
+#scaling transformation matrix from class
+
+# Here is how those new methods are integrated with the (a) part of the project:
+# 1. You do all the Scales, Rotates, Translates and so on on your matrix stack. 
+# 2. You get the current CTM (there are multiple ways to go about it and gtGetMatrix is a great way to do it)
+# 3. When you want to draw a point on the screen, you get your point in a 3D space by doing CTM * [x, y, z] 
+# (x, y, z are coordinates of the point , given to you in gtVertex()) and then apply either gtOrtho() 
+# or gtPerspective() to the result of the (CTM * [x, y, z]). 
+
+def gtOrtho(_left, _right, _bottom, _top, _near, _far):
+    global right
+    global left
+    global top
+    global bottom
+    global far
+    global near
+    global ortho_matrix
+    
+    left = _left
+    right = _right
+    top = _top
+    bottom = _bottom
+    near = _near
+    far = _far
+    
+    ortho_matrix = [[width/(right - left), 0, 0, -left],
+     [0, height/(top-bottom), 0, -bottom],
+     [0, 0, 1, 0],
+     [0, 0, 0, 1]]
+    
+    isOrthographic = True
+    pass
+    
+def gtPerspective(_fov, _near, _far):
+    global fov, near_persp, far_persp
+    
+    fov = _fov
+    near = _near
+    far = _far
+    isOrthographic = False
+    pass
+
+def gtBeginShape():
+    global vertice_list
+    vertice_list = []
+    pass
+
+def gtEndShape():
+    #the function where it happpens
+    #two transormations - 1 to take it from 0:800 to -400:400, 2nd one is projection
+    
+    for i in range(1,len(vertice_list), 2):
+        #Points are represented through the following formula:
+        #ortho || persp * (CTM * point)
+        gtPushMatrix()
+        gtTranslate(width/2, width/2, width/2)
+        pt1 = matmult(gtGetMatrix(), vertice_list[i-1])
+        print pt1
+        pt1 = matmult(ortho_matrix, pt1)
+        pt2 = matmult(gtGetMatrix(), vertice_list[i])
+        pt2 = matmult(ortho_matrix, pt2)
+        print "Point 1: " + str(pt1[0][0]) + ", " + str(pt1[0][1]) + ", " + str(pt1[0][2])
+        
+        line(pt1[0][0], pt1[0][1], pt1[0][2], pt2[0][0], pt2[0][1], pt2[0][2])
+        gtPopMatrix()
+    pass
+    
+def getPointValues(pt1):
+    return [pt1[0], pt1[1], pt1[2]]
+
+
+def gtVertex(x, y, z):
+    #is apparently also known as gtAddVertex
+    #used for adding vertices to the global list of points
+    vertice_list.append([[float(x), float(y), float(z), 1]])
+    
+    pass
