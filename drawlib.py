@@ -53,17 +53,6 @@ def gtOrtho(_left, _right, _bottom, _top, _near, _far):
     near = _near
     far = _far
     
-    x_scalar = width/(right - left)
-    x_trans = -left
-    y_scalar = height/(top - bottom)
-    y_trans = -bottom
-
-    ortho_matrix =  [[x_scalar, 0, 0, x_trans],
-                     [0, y_scalar, 0, y_trans],
-                     [0, 0, 1, 0],
-                     [0, 0, 0, 1]]
-
-    
     isOrthographic = True
     pass
     
@@ -84,7 +73,6 @@ def gtPerspective(_fov, _near, _far):
     isOrthographic = False
     
     #Math for the perspective matrix
-    k = math.tan(fov/2)
     pass
 
 def gtBeginShape():
@@ -95,7 +83,6 @@ def gtBeginShape():
 def gtEndShape():
     
     #the function where it happpens
-    #two transormations - 1 to take it from 0:800 to -400:400, 2nd one is projection
     
     for i in range(1,len(vertice_list), 2):
         #Points are represented through the following formula:
@@ -113,10 +100,20 @@ def gtEndShape():
             line(pt1[0][0], pt1[1][0], pt2[0][0], pt2[1][0])
         else:
             print "Point 1 : " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
-            pt1[0][0] =  (pt1[0][0] + k) * (width/(2*k))
-            pt2 = matmult(gtGetMatrix(), pt2)
-            pt1[1][0] =  (pt1[1][0] - k) * (-height/(2*k))
-            pt2 = matmult(gtGetMatrix(), pt2)
+            #Step 1
+            x_prime1 = pt1[0][0] / abs(pt1[2][0])
+            y_prime1 = pt1[1][0] / abs(pt1[2][0])
+            x_prime2 = pt2[0][0] / abs(pt2[2][0])
+            y_prime2 = pt2[1][0] / abs(pt2[2][0])
+            #Step 2
+            k = math.tan(radians(fov)/2.0)
+            
+            #Step 3
+            pt1[0][0] =  (x_prime1 + k) * (width/(2*k))
+            pt1[1][0] =  (y_prime1 - k) * (-height/(2*k))
+            
+            pt2[0][0] =  (x_prime2 + k) * (width/(2*k))
+            pt2[1][0] =  (y_prime2 - k) * (-height/(2*k))
             print "Point 1 after Perspective: " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
         
     
