@@ -97,10 +97,6 @@ def gtGetMatrix():
 
 
 def print_ctm():
-    # for i in range(len(A[0])):
-    #     print A[i]
-        
-    
     for j in range(len(stack[0][0])):
         print stack[0][j]
     print "\n"

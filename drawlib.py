@@ -54,7 +54,6 @@ def gtOrtho(_left, _right, _bottom, _top, _near, _far):
     far = _far
     
     isOrthographic = True
-    pass
     
 def gtPerspective(_fov, _near, _far):
     
@@ -71,14 +70,11 @@ def gtPerspective(_fov, _near, _far):
     near_persp = _near
     near = _near
     isOrthographic = False
-    
-    #Math for the perspective matrix
-    pass
+
 
 def gtBeginShape():
     global vertice_list
     vertice_list = []
-    pass
 
 def gtEndShape():
     
@@ -115,19 +111,14 @@ def gtEndShape():
             pt2[0][0] =  (x_prime2 + k) * (width/(2*k))
             pt2[1][0] =  (y_prime2 - k) * (-height/(2*k))
             print "Point 1 after Perspective: " + str(pt1[0][0]) + ", " + str(pt1[1][0]) + ", " + str(pt1[2][0])
-        
-    
-    pass
-    
-def getPointValues(pt1):
-    return [[pt1[0]], [pt1[1]], [pt1[2]]]
+            line(pt1[0][0], pt1[1][0], pt2[0][0], pt2[1][0])
 
 
 def gtVertex(x, y, z):
     #is apparently also known as gtAddVertex
     #used for adding vertices to the global list of points
     ctm = gtGetMatrix()            
-    pt1 = matmult(ctm, [[float(x)], [float(y)], [float(z), 1]])
+    pt1 = matmult(ctm, [[float(x)], [float(y)], [float(z)], [1]])
     vertice_list.append(pt1)
     
     pass
